@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "quicksort.h"
+#include "shellsort.h"
 
 long long int lliabs(long long int x) {
     if (x < 0)
@@ -27,14 +28,16 @@ void fill_array(int n, long long int *a, int filltype,
             swap_vp(a+i, a+n-i-1, sizeof(*a));
 }
 
+
+
 int main(void) {
     srand(time(NULL));
 
     long long int *a = malloc(100*1000*1000 * sizeof(*a));
-    int n = 100;
+    int n = 100, maxn = 100*1000*1000;
 
-    for (int ftype = 1; ftype <= 4; ++ftype)
-        for (n = 10; n <= 100*1000*1000; n *= 10) {
+    for (int ftype = 1; ftype <= 4; ++ftype) {
+        for (n = 10; n <= maxn; n *= 10) {
             fill_array(n, a, ftype, less);
             long long int was_cmps = cmps, was_swaps = swaps;
             quicksort(n, a, less);
@@ -43,6 +46,23 @@ int main(void) {
             for (int i = 0; i < n-1; ++i)
                 assert(!less(a[i+1], a[i]));
         }
+        putc('\n', stdout);
+    }
+
+    putc('\n', stdout);
+
+    for (int ftype = 1; ftype <= 4; ++ftype) {
+        for (n = 10; n <= maxn; n *= 10) {
+            fill_array(n, a, ftype, less);
+            long long int was_cmps = cmps, was_swaps = swaps;
+            shellsort(n, a, less, step);
+            printf("shellsort swaps=%lld cmps=%lld ftype=%d n=%d\n",
+                swaps - was_swaps, cmps - was_cmps, ftype, n);
+            for (int i = 0; i < n-1; ++i)
+                assert(!less(a[i+1], a[i]));
+        }
+        putc('\n', stdout);
+    }
 
     free(a);
     return 0;
