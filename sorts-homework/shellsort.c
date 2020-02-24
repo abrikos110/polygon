@@ -18,14 +18,15 @@ void insertionsort(
 
 int step(int n, int i) {
     int j, ans = 1;
-    // from Wikipedia:
+    // from "A new upper bound for shellsort. Robert Sedgewick"
+    // https://doi.org/10.1016/0196-6774(86)90001-5
     for (j = 0; ans < n; ++j)
-        ans = 1 + 9 * ((1 << j) - (1 << ((j+1) >> 1)));
+        ans = 1 + 9 * (1 << (2*j)) - 9 * (1 << j); // 1 + 9 * (4**j - 2**j)
     j -= 1+i;
     if (j < 0)
         return 0;
 
-    return 1 + 9 * ((1 << j) - (1 << ((j+1) >> 1)));
+    return 1 + 9 * (1 << (2*j)) - 9 * (1 << j); // 1 + 9 * (4**j - 2**j)
 }
 
 void shellsort(

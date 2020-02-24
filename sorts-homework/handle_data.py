@@ -1,14 +1,14 @@
+import sys
 import numpy
 import matplotlib
 import matplotlib.pyplot as plt
 
-with open('data.txt') as f:
-    data = (f.read()
-            .replace('swaps=', '')
-            .replace('cmps=', '')
-            .replace('ftype=', '')
-            .replace('n=', '')
-            .split('\n'))
+data = (sys.stdin.read()
+        .replace('swaps=', '')
+        .replace('cmps=', '')
+        .replace('ftype=', '')
+        .replace('n=', '')
+        .split('\n'))
 
 *data, = map(str.split, data)
 *data, = filter(len, data)
