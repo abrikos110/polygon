@@ -19,7 +19,9 @@ data = {cl: list(map(lambda x: x[1:],
 for cl in data:
     data[cl] = numpy.array(data[cl], dtype=numpy.int64)
 
-print(data)
+for cl in data:
+    for l in data[cl]:
+        print(cl, *l)
 for i in range(2):
     for stype in data:
         for ftype in range(1, 5):
