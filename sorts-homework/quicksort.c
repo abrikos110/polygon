@@ -7,42 +7,19 @@ int partition(
     int n,
     long long int *a,
     int (*less)(long long int, long long int),
-     long long int pivot) {
+    long long int pivot) {
 
-    // need min(a) <= pivot <= max(a)
-    assert(n > 1);
-    int p = -1, q = n;
-    while (1) {
-        do {
+    int p = 0, q = n-1;
+    while (p <= q) {
+        while (less(a[p], pivot)) // a[p] < pivot
             ++p;
-        } while (less(a[p], pivot)); // a[p] < pivot
-        do {
+        while (less(pivot, a[q])) // a[q] > pivot
             --q;
-        } while (less(pivot, a[q])); // a[q] > pivot
         if (p >= q)
             break;
-        swap_vp(a+p, a+q, sizeof(*a));
+        swap_vp(a + p++, a + q--, sizeof(*a));
     }
-    /* always 0 <= i < p ==> a[i] <= pivot
-       and    q < i < n ==> a[i] >= pivot
-
-       p > q ==> 0 <= i < p ==> a[i] <= pivot
-                 and q < p <= i < n ==> a[i] >= pivot
-       p == q ==> p and q stopped on same value ==> a[p] >= pivot >= a[q]
-    */
-
-    assert(!less(a[p], pivot));
-    assert(p != n); // TODO: prove it
-    // WORKAROUND to guarantee decreasing of size of array in quicksort
-    if (p == 0) {
-        int mini = 0;
-        for (int i = 0; i < n; ++i)
-            if (less(a[i], a[mini]))
-                mini = i;
-        if (mini != 0)
-            swap_vp(a+mini, a, sizeof(*a));
-        p = 1;
-    }
+    assert(p > 0 && p != n);
     return p;
 }
 
@@ -70,10 +47,17 @@ void quicksort(
         return;
     }
 
-    long long int pivot = median3(
-        a[rand_lli(1) % n],
-        a[rand_lli(1) % n],
-        a[rand_lli(1) % n], less);
+    int i = rand_lli(1) % n,
+        j = rand_lli(1) % n,
+        k = rand_lli(1) % n;
+    j = (j + (j == i)) % n;
+    if (k == i || k == j) {
+        if ((k + 1) % n == i || (k + 1) % n == j)
+            ++k;
+        k = (k + 1) % n;
+    }
+    // i != j != k
+    long long int pivot = median3(a[i], a[j], a[k], less);
     int p = partition(n, a, less, pivot);
     quicksort(p, a, less);
     quicksort(n-p, a+p, less);
