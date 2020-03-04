@@ -20,8 +20,24 @@ for cl in data:
     data[cl] = numpy.array(data[cl], dtype=numpy.int64)
 
 for cl in data:
-    for l in data[cl]:
-        print(cl, *l)
+    print(cl)
+    print('n,Параметр,Номер сгенерированного массива,,,,Среднее значение')
+    print(',,1,2,3,4')
+    for n in range(1, 9):
+        n = 10 ** n
+        row = filter(lambda x: x[3] == n, data[cl])
+        row = sorted(row, key=lambda x: x[2])
+        *cmps, = map(lambda x: x[1], row)
+        *swaps, = map(lambda x: x[0], row)
+        print('{},Сравнения,{},{}'.format(
+            str(n),
+            ','.join(map(str, cmps)),
+            sum(cmps) / len(cmps)))
+        print(',Перемещения,{},{}'.format(
+            ','.join(map(str, swaps)),
+            sum(swaps) / len(swaps)))
+    print()
+
 for i in range(2):
     for stype in data:
         for ftype in range(1, 5):
