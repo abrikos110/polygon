@@ -19,8 +19,7 @@ int partition(
             break;
         swap_vp(a + p++, a + q--, sizeof(*a));
     }
-    assert(p > 0 && p != n);
-    return p;
+    return q+1;
 }
 
 void quicksort(
@@ -47,17 +46,7 @@ void quicksort(
         return;
     }
 
-    int i = rand_lli(1) % n,
-        j = rand_lli(1) % n,
-        k = rand_lli(1) % n;
-    j = (j + (j == i)) % n;
-    if (k == i || k == j) {
-        if ((k + 1) % n == i || (k + 1) % n == j)
-            ++k;
-        k = (k + 1) % n;
-    }
-    // i != j != k
-    long long int pivot = median3(a[i], a[j], a[k], less);
+    long long int pivot = a[n/2];
     int p = partition(n, a, less, pivot);
     quicksort(p, a, less);
     quicksort(n-p, a+p, less);
